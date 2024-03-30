@@ -2,45 +2,50 @@ import argparse
 from pathlib import Path
 import zipfile
 
-# Set up argument parsing
-parser = argparse.ArgumentParser(description="Unzip and organize student submissions.")
-parser.add_argument('submissions_dir', type=str, help='Path to the directory containing the student submissions')
+def unzip_file(zip_path, extract_to):
+    """Unzip a file to the specified location."""
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        zip_ref.extractall(extract_to)
+        print(f"Extracted {zip_path} to {extract_to}")
 
-# Parse command line arguments
-args = parser.parse_args()
+def organize_submissions(submissions_dir):
+    """Organize and unzip submissions in the given directory."""
+    for file in submissions_dir.iterdir():
+        if file.is_file():
+            name = file.stem.split('_', 1)[0]
+            student_dir = submissions_dir / name
+            student_dir.mkdir(exist_ok=True)
+            file.rename(student_dir / file.name)
 
-# Convert the submissions directory path from string to Path object
-submissions_dir = Path(args.submissions_dir)
+    for student_dir in submissions_dir.iterdir():
+        if student_dir.is_dir():
+            for file in student_dir.iterdir():
+                if file.suffix == '.zip':
+                    unzip_file(file, student_dir)
+                    file.unlink()  # Optionally remove the zip file after extraction
 
-# Ensure the submissions directory exists
-if not submissions_dir.exists():
-    print(f"Directory {submissions_dir} does not exist.")
-    exit()
+def main(submissions_path):
+    """Process submissions, starting by checking if the path is a zip file."""
+    submissions_path = Path(submissions_path)
+    
+    if submissions_path.is_file() and submissions_path.suffix == '.zip':
+        # If the path is a zip file, extract it to a directory with the same name
+        extract_to = submissions_path.parent / submissions_path.stem
+        unzip_file(submissions_path, extract_to)
+        submissions_dir = extract_to
+    elif submissions_path.is_dir():
+        submissions_dir = submissions_path
+    else:
+        print(f"The path {submissions_path} is not a valid directory or zip file.")
+        return
+    
+    organize_submissions(submissions_dir)
+    print("All submissions have been processed.")
 
-# Iterate over all files in the submissions directory
-for file in submissions_dir.iterdir():
-    if file.is_file():
-        # Extract the student's name (everything before the first underscore)
-        name = file.stem.split('_', 1)[0]
-        
-        # Create a directory for the student if it doesn't exist
-        student_dir = submissions_dir / name
-        student_dir.mkdir(exist_ok=True)
-        
-        # Move the file to the student's directory
-        file.rename(student_dir / file.name)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Unzip and organize student submissions.")
+    parser.add_argument('submissions_path', type=str, help='Path to the submissions directory or zip file')
+    args = parser.parse_args()
 
-# Now, loop through each student directory to unzip files
-for student_dir in submissions_dir.iterdir():
-    if student_dir.is_dir():
-        for file in student_dir.iterdir():
-            # Check if the file is a zip file
-            if file.suffix == '.zip':
-                # Unzip the file
-                with zipfile.ZipFile(file, 'r') as zip_ref:
-                    zip_ref.extractall(student_dir)
-                # Optionally, remove the zip file after extraction
-                file.unlink()
-
-print("All files processed.")
+    main(args.submissions_path)
 
