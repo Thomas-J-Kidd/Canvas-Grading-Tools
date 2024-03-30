@@ -17,13 +17,20 @@ Requirements
 
     Open a terminal or command prompt.
     Navigate to the directory containing the organize_submissions.py script.
-    Run the script with the path to the submissions directory as an argument:
+    Run the script with the path to the submissions directory as an argument. The submissions directory can be unzipped or zipped:
 
 ```bash
 
-python organize_submissions.py /path/to/submissions
+python3 organize_submissions.py /path/to/submissions
+```
+or 
+```bash
+
+python3 organize_submissions.py /path/to/submissions.zip
 ```
 Replace `/path/to/submissions` with the actual path to your directory containing the student submissions.
+
+**IMPORTANT** do not have this script in the same folder as the submissions folder
 ## Script Features
 
     Automatic Organization: Moves each student's files into a directory named after the student, based on the name extracted from the file name.
