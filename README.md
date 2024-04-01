@@ -35,6 +35,7 @@ Replace `/path/to/submissions` with the actual path to your directory containing
 
 Automatic Organization: Moves each student's files into a directory named after the student, based on the name extracted from the file name.
 Zip File Handling: Automatically unzips all .zip files within each student's directory.
+Grading: CSV File with a column of the names for grading
 Self-Preservation: The script is designed to ignore and preserve itself, avoiding accidental deletion or movement.
 
 ## Notes
