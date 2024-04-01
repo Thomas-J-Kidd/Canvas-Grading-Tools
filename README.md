@@ -21,14 +21,20 @@ Run the script with the path to the submissions directory as an argument. The su
 
 ```bash
 
-python3 organize_submissions.py /path/to/submissions
-```
-or 
-```bash
-
 python3 organize_submissions.py /path/to/submissions.zip
 ```
-Replace `/path/to/submissions` with the actual path to your directory containing the student submissions.
+or
+
+```bash
+
+python3 organize_submissions.py /path/to/submissions
+```
+
+Optionally, you can specify a new location and name for the folder where the submissions should be organized:
+
+```bash
+python3 organize_submissions.py /path/to/submissions.zip /new/path/for/organized_submissions/file_name
+```
 
 **IMPORTANT** do not have this script in the same folder as the submissions folder
 ## Script Features
@@ -36,7 +42,7 @@ Replace `/path/to/submissions` with the actual path to your directory containing
 Automatic Organization: Moves each student's files into a directory named after the student, based on the name extracted from the file name.
 Zip File Handling: Automatically unzips all .zip files within each student's directory.
 Grading: CSV File with a column of the names for grading
-Self-Preservation: The script is designed to ignore and preserve itself, avoiding accidental deletion or movement.
+
 
 ## Notes
 
